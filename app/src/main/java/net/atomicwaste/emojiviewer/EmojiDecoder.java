@@ -77,8 +77,9 @@ public class EmojiDecoder extends AppCompatActivity {
         } else {
             enterMessage.setText(R.string.no_text_in_clipbard);
         }
-        //translateMessage();
+        translateMessage();
     }
+
     public void translateMessage() {
         // Get the string
         EditText enterMessage = (EditText) findViewById(R.id.enter_message);
