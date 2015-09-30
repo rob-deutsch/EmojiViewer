@@ -1,7 +1,9 @@
 package net.atomicwaste.emojiviewer;
 
+import android.app.AlertDialog;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,6 +52,20 @@ public class EmojiDecoder extends AppCompatActivity {
             is.close();
         }
         catch (IOException ex) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle("Error")
+                    .setMessage("Couldn't find emoji.csv")
+                    .setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                });
+            AlertDialog alert = builder.create();
+            alert.show();
             return;
         }
 
