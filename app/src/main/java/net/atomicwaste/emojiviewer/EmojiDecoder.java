@@ -38,6 +38,24 @@ public class EmojiDecoder extends AppCompatActivity {
 
         // Read in emoji mapping
         // Open the CSV
+        getEmojiMap();
+
+        // Set up watcher
+        EditText enterMessage = (EditText) findViewById(R.id.enter_message);
+        enterMessage.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                translateMessage();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+    }
+
+    private void getEmojiMap() {
         emojiMap = new SparseIntArray();
         try {
             AssetManager am = getAssets();
@@ -59,30 +77,15 @@ public class EmojiDecoder extends AppCompatActivity {
                     .setMessage("Couldn't find emoji.csv")
                     .setIcon(android.R.drawable.ic_dialog_alert);
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int which)
                 {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                    }
-                });
+                    dialog.dismiss();
+                }
+            });
             AlertDialog alert = builder.create();
             alert.show();
-            return;
         }
-
-        // Set up watcher
-        EditText enterMessage = (EditText) findViewById(R.id.enter_message);
-        enterMessage.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                translateMessage();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
     }
 
     @Override
