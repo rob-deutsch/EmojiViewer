@@ -2,4 +2,5 @@
     <string name="app_name">Emoji Viewer</string>
     <string name="translation">Your clipboard with emojis decoded:</string>
     <string name="no_text_in_clipbard">(No text has been copied)</string>
+    <string name="instructions">instructions</string>
 </resources>
