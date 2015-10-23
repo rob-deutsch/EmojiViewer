@@ -189,7 +189,12 @@ public class EmojiDecoder extends AppCompatActivity {
             int cp = s.codePointAt(offset);
             offset += Character.charCount(cp);
             String orig_char = new String(Character.toChars(cp));
-            Object thing = unicodeMap.get(cp, orig_char);
+            Object thing = unicodeMap.get(cp);
+            if (thing != null) {
+                thing = "(" + thing + ")";
+            } else {
+                thing = orig_char;
+            }
             output += thing;
         }
 
