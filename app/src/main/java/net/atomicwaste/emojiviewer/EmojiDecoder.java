@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 
 public class EmojiDecoder extends AppCompatActivity {
     public SparseIntArray emojiMap;
+    public SparseArray unicodeMap;
 
     @Override
     protected void onPostResume() {
@@ -87,6 +88,39 @@ public class EmojiDecoder extends AppCompatActivity {
             alert.show();
         }
     }
+    
+    private void getUnicodeMap() {
+        unicodeMap = new SparseArray();
+        try {
+            AssetManager am = getAssets();
+            InputStream is = am.open("unicode_70_80.csv");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            br.readLine(); // Read the headings line first
+            while (br.ready()) {
+                String line = br.readLine();
+                String[] values = line.split(",");
+                emojiMap.put(Integer.parseInt(values[0]), values[1]);
+            }
+            is.close();
+        }
+        catch (IOException ex) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle("Error")
+                    .setMessage("Couldn't find unicode_70_80.csv")
+                    .setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,13 +168,24 @@ public class EmojiDecoder extends AppCompatActivity {
         int countCodePoints = s.codePointCount(0, s.length());
 
         // Collect the codepoints of all the characters
-        String output = "";
+        String proper_emoji = "";
         int offset = 0, strLen = s.length();
         while (offset < strLen) {
             int cp = s.codePointAt(offset);
             offset += Character.charCount(cp);
             cp = emojiMap.get(cp, cp);
-            output += new String(Character.toChars(cp));
+            proper_emoji += new String(Character.toChars(cp));
+        }
+        
+        // Collect the codepoints of all the characters
+        String output = "";
+        int offset = 0, strLen = s.length();
+        while (offset < strLen) {
+            int cp = s.codePointAt(offset);
+            offset += Character.charCount(cp);
+            String add_chars = "";
+            add_chars = unicodeMap.get(cp, Character.toChars(cp));
+            output += new String(add_chars);
         }
 
         // Output to the text box
