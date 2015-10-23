@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +41,7 @@ public class EmojiDecoder extends AppCompatActivity {
         // Read in emoji mapping
         // Open the CSV
         getEmojiMap();
+        getUnicodeMap();
 
         // Set up watcher
         EditText enterMessage = (EditText) findViewById(R.id.enter_message);
@@ -54,6 +56,9 @@ public class EmojiDecoder extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
+
+        enterMessage.setText("test");
+
     }
 
     private void getEmojiMap() {
@@ -100,7 +105,7 @@ public class EmojiDecoder extends AppCompatActivity {
             while (br.ready()) {
                 String line = br.readLine();
                 String[] values = line.split(",");
-                emojiMap.put(Integer.parseInt(values[0]), values[1]);
+                unicodeMap.put(Integer.parseInt(values[0]), values[1]);
             }
             is.close();
         }
@@ -150,10 +155,10 @@ public class EmojiDecoder extends AppCompatActivity {
                 String text = cm.getPrimaryClip().getItemAt(0).getText().toString();
                 enterMessage.setText(text);
             } else {
-                enterMessage.setText(R.string.no_text_in_clipbard);
+                enterMessage.setText("\uD83E\uDD10");
             }
         } else {
-            enterMessage.setText(R.string.no_text_in_clipbard);
+            enterMessage.setText("\uD83E\uDD10");
         }
         translateMessage();
     }
@@ -179,13 +184,13 @@ public class EmojiDecoder extends AppCompatActivity {
         
         // Collect the codepoints of all the characters
         String output = "";
-        int offset = 0, strLen = s.length();
+        offset = 0;
         while (offset < strLen) {
             int cp = s.codePointAt(offset);
             offset += Character.charCount(cp);
-            String add_chars = "";
-            add_chars = unicodeMap.get(cp, Character.toChars(cp));
-            output += new String(add_chars);
+            String orig_char = new String(Character.toChars(cp));
+            Object thing = unicodeMap.get(cp, orig_char);
+            output += thing;
         }
 
         // Output to the text box
