@@ -135,18 +135,6 @@ public class EmojiDecoder extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.show_instructions:
-                //openSearch();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     public void fromClipboard(View view) {        // Get the string
         TextView enterMessage = (TextView) findViewById(R.id.enter_message);
         ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
