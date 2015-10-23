@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Emoji Viewer</string>
     <string name="translation">Your clipboard with emojis decoded:</string>
-    <string name="no_text_in_clipbard">(No text has been copied)</string>
+    <string name="no_text_in_clipbard">(No text has been copied. Please copy some text and open the app again.)</string>
     <string name="instructions">instructions</string>
 </resources>

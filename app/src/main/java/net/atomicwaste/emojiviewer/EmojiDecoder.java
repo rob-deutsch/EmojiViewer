@@ -143,10 +143,10 @@ public class EmojiDecoder extends AppCompatActivity {
                 String text = cm.getPrimaryClip().getItemAt(0).getText().toString();
                 enterMessage.setText(text);
             } else {
-                enterMessage.setText("\uD83E\uDD10");
+                enterMessage.setText(R.string.no_text_in_clipbard);
             }
         } else {
-            enterMessage.setText("\uD83E\uDD10");
+            enterMessage.setText(R.string.no_text_in_clipbard);
         }
         translateMessage();
     }
