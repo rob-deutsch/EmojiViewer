@@ -139,12 +139,9 @@ public class EmojiDecoder extends AppCompatActivity {
         TextView enterMessage = (TextView) findViewById(R.id.enter_message);
         ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         if (cm.hasPrimaryClip()) {
-            if (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                 String text = cm.getPrimaryClip().getItemAt(0).getText().toString();
                 enterMessage.setText(text);
-            } else {
-                enterMessage.setText(R.string.no_text_in_clipbard);
-            }
+
         } else {
             enterMessage.setText(R.string.no_text_in_clipbard);
         }
@@ -172,9 +169,9 @@ public class EmojiDecoder extends AppCompatActivity {
         
         // Collect the codepoints of all the characters
         String output = "";
-        offset = 0;
+        offset = 0; strLen = proper_emoji.length();
         while (offset < strLen) {
-            int cp = s.codePointAt(offset);
+            int cp = proper_emoji.codePointAt(offset);
             offset += Character.charCount(cp);
             String orig_char = new String(Character.toChars(cp));
             Object thing = unicodeMap.get(cp);
