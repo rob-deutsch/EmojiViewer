@@ -22,10 +22,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class EmojiDecoder extends AppCompatActivity {
     public SparseIntArray emojiMap;
     public SparseArray unicodeMap;
+    public SparseArray ignoreMap;
 
     @Override
     protected void onPostResume() {
@@ -42,6 +44,7 @@ public class EmojiDecoder extends AppCompatActivity {
         // Open the CSV
         getEmojiMap();
         getUnicodeMap();
+        getIgnoreMap();
 
         // Set up watcher
         EditText enterMessage = (EditText) findViewById(R.id.enter_message);
@@ -127,6 +130,39 @@ public class EmojiDecoder extends AppCompatActivity {
         }
     }
 
+    private void getIgnoreMap() {
+        ignoreMap = new SparseArray();
+        try {
+            AssetManager am = getAssets();
+            InputStream is = am.open("ignore.csv");
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            br.readLine(); // Read the headings line first
+            while (br.ready()) {
+                String line = br.readLine();
+                String[] values = line.split(",");
+                ignoreMap.put(Integer.parseInt(values[0]), values[1]);
+            }
+            is.close();
+        }
+        catch (IOException ex) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle("Error")
+                    .setMessage("Couldn't find unicode_70_80.csv")
+                    .setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -168,7 +204,7 @@ public class EmojiDecoder extends AppCompatActivity {
         }
         
         // Collect the codepoints of all the characters
-        String output = "";
+        String new_unicode = "";
         offset = 0; strLen = proper_emoji.length();
         while (offset < strLen) {
             int cp = proper_emoji.codePointAt(offset);
@@ -177,6 +213,22 @@ public class EmojiDecoder extends AppCompatActivity {
             Object thing = unicodeMap.get(cp);
             if (thing != null) {
                 thing = "(" + thing + ")";
+            } else {
+                thing = orig_char;
+            }
+            new_unicode += thing;
+        }
+
+        // Collect the codepoints of all the characters
+        String output = "";
+        offset = 0; strLen = new_unicode.length();
+        while (offset < strLen) {
+            int cp = new_unicode.codePointAt(offset);
+            offset += Character.charCount(cp);
+            String orig_char = new String(Character.toChars(cp));
+            Object thing = ignoreMap.get(cp);
+            if (thing != null) {
+                thing = "";
             } else {
                 thing = orig_char;
             }
