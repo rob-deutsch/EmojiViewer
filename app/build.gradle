@@ -1,4 +1,8 @@
-apply plugin: 'com.android.application'
+dependencies {
+    classpath 'com.android.tools.build:gradle:1.0.0'
+}
+
+apply plugin: "com.android.application"
 
 android {
     compileSdkVersion 23
